@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: redis
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - image: bretfisher/redis-tini
+        name: redis
+        livenessProbe:
+          exec:
+            command:
+            - /tini
+            - -s
+            - --
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 5
